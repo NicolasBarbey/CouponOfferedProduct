@@ -26,33 +26,35 @@
   </div>
 
 <script>
-    var $offeredCatSelect = $('#offered-product-category-id');
+    function couponInputFormSetup() {
+        var $offeredCatSelect = $('#offered-product-category-id');
 
-    $offeredCatSelect.change(function() {
+        $offeredCatSelect.change(function() {
 
-        var $category_id = $(this).val();
+            var $category_id = $(this).val();
 
-        $('#input-offered-products-id').hide();
-        $('#offered-products-id').html('');
+            $('#input-offered-products-id').hide();
+            $('#offered-products-id').html('');
 
-        if ($category_id != 0) {
+            if ($category_id != 0) {
 
-            $('#input-offered-products-id-loading').show();
+                $('#input-offered-products-id-loading').show();
 
-            $.ajax({
-                url: "{url path='/admin/coupon/type-fragments/ajax-products-list'}",
-                type: 'POST',
-                data: {
-                    category_id: $category_id
-                },
-                success: function(options) {
-                    $('#offered-products-id').html(options);
-                    $('#input-offered-products-id').show();
-                },
-                complete: function() {
-                    $('#input-offered-products-id-loading').hide();
-                }
-            });
-        }
-    });
+                $.ajax({
+                    url: "{url path='/admin/coupon/type-fragments/ajax-products-list'}",
+                    type: 'POST',
+                    data: {
+                        category_id: $category_id
+                    },
+                    success: function(options) {
+                        $('#offered-products-id').html(options);
+                        $('#input-offered-products-id').show();
+                    },
+                    complete: function() {
+                        $('#input-offered-products-id-loading').hide();
+                    }
+                });
+            }
+        });
+    }
 </script>
