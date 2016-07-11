@@ -40,7 +40,7 @@ class OfferedProduct extends AbstractRemove
     {
         return $this->facade
             ->getTranslator()
-            ->trans('Offer a product', array());
+            ->trans('Offer a product', array(), CouponOfferedProduct::DOMAIN_NAME);
     }
 
     public function getToolTip()
@@ -119,7 +119,9 @@ class OfferedProduct extends AbstractRemove
             if (floatval($fieldValue) < 0) {
                 throw new \InvalidArgumentException(
                     Translator::getInstance()->trans(
-                        'Please select the offered product'
+                        'Please select the offered product',
+                        array(),
+                        CouponOfferedProduct::DOMAIN_NAME
                     )
                 );
             }
@@ -127,7 +129,9 @@ class OfferedProduct extends AbstractRemove
             if (empty($fieldValue)) {
                 throw new \InvalidArgumentException(
                     Translator::getInstance()->trans(
-                        'Please select the category of the offered product'
+                        'Please select the category of the offered product',
+                        array(),
+                        CouponOfferedProduct::DOMAIN_NAME
                     )
                 );
             }
