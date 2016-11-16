@@ -81,10 +81,15 @@ class OfferedProduct extends AbstractRemove
         /** @var CartItem $cartItem */
         foreach ($cartItems as $cartItem) {
             if ($cartItem->getProduct()->getId() == $this->offeredProductId) {
-                $isInCartOfferedProduct = true; // at this point the offeredProduct is already in the $cart
+                $isInCartOfferedProduct = true; // at this point the offeredProduct is already in the cart
 
                 if (! $cartItem->getPromo() || $this->isAvailableOnSpecialOffers()) {
-                    $discount += $cartItem->getRealTaxedPrice($this->facade->getDeliveryCountry());
+                    // Sets its price to zero
+                    $cartItem
+                        ->setPromoPrice(0)
+                        ->setPrice(0)
+                        ->save();
+    
                     break;
                 }
             }
@@ -92,7 +97,6 @@ class OfferedProduct extends AbstractRemove
 
         // Create the product if it's not in the cart yet
         if (!$isInCartOfferedProduct && null !== $freeProduct = ProductQuery::create()->findPk($this->offeredProductId)) {
-
             $cartEvent = new CartEvent($this->facade->getCart());
 
             $cartEvent->setNewness(true);
@@ -105,7 +109,12 @@ class OfferedProduct extends AbstractRemove
 
             $freeProductCartItem = $cartEvent->getCartItem();
 
-            $discount += $freeProductCartItem->getRealTaxedPrice($this->facade->getDeliveryCountry());
+            // To prevent tax calculation problems, set the price of the product to 0, and don't increate the discount value
+            // See issue https://github.com/thelia-modules/CouponOfferedProduct/issues/3 for more information.
+            $freeProductCartItem
+                ->setPromoPrice(0)
+                ->setPrice(0)
+                ->save();
         }
 
         return $discount;
