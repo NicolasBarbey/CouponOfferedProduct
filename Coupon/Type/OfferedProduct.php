@@ -105,7 +105,7 @@ class OfferedProduct extends AbstractRemove
             $cartEvent->setProductSaleElementsId($freeProduct->getDefaultSaleElements()->getId());
             $cartEvent->setProduct($this->offeredProductId);
 
-            $this->facade->getDispatcher()->dispatch(TheliaEvents::CART_ADDITEM, $cartEvent);
+            $this->facade->getDispatcher()->dispatch($cartEvent, TheliaEvents::CART_ADDITEM);
 
             $freeProductCartItem = $cartEvent->getCartItem();
 
@@ -125,7 +125,7 @@ class OfferedProduct extends AbstractRemove
         $this->checkBaseCouponFieldValue($fieldName, $fieldValue);
 
         if ($fieldName === self::OFFERED_PRODUCT_ID) {
-            if (floatval($fieldValue) < 0) {
+            if ((float)$fieldValue < 0) {
                 throw new \InvalidArgumentException(
                     Translator::getInstance()->trans(
                         'Please select the offered product',
